@@ -1,87 +1,84 @@
-version: '2.2'
+version: '3'
 services:
-  es01:
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
-    container_name: es01
+    container_name: elasticsearch
+    hostname: elasticsearch
+    restart: unless-stopped
     environment:
-      - node.name=es01
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - cluster.name=docker-cluster
+      - node.name=node1
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms384m -Xmx384m"
+      - "cluster.initial_master_nodes=node1"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - data01:/usr/share/elasticsearch/data
+      - ./esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
-      - elastic
+      - es7net
 
-  es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
-    container_name: es02
-    environment:
-      - node.name=es02
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es03
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+  logstash:
+    image: docker.elastic.co/logstash/logstash-oss:7.2.0
+    container_name: logstash
+    hostname: logstash
+    restart: always
     volumes:
-      - data02:/usr/share/elasticsearch/data
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/data:/opt/logstash_data
+      - ./logstash/template:/opt/logstash_template
+      - ./logstash/logs:/usr/share/logstash/logs
     ports:
-      - 9201:9201
-    networks:
-      - elastic
-
-  es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1
-    container_name: es03
+      - "127.0.0.1:5000:5000/udp"
     environment:
-      - node.name=es03
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es02
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data03:/usr/share/elasticsearch/data
-    ports:
-      - 9202:9202
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
-      - elastic
+      - es7net
+    depends_on:
+      - elasticsearch
 
-  kib01:
-    image: docker.elastic.co/kibana/kibana:7.7.1
-    container_name: kib01
+  logspout:
+    image: bekt/logspout-logstash
+    container_name: logspout
+    hostname: logspout
+    restart: always
+    environment:
+      ROUTE_URIS: logstash+tcp://logstash:5000
+    depends_on:
+      - logstash
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - es7net
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.2.0
+    container_name: kibana
+    hostname: kibana
+    environment:
+      SERVER_NAME: kibana_server
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - es7net
+    depends_on:
+      - elasticsearch
     ports:
       - 5601:5601
-    environment:
-      ELASTICSEARCH_URL: http://es01:9200
-      ELASTICSEARCH_HOSTS: http://es01:9200
-    networks:
-      - elastic
-
-volumes:
-  data01:
-    driver: local
-  data02:
-    driver: local
-  data03:
-    driver: local
+  jupyter:
+    build:
+      context: ./dockerfile
+      dockerfile: dockerfile-jupyter
+    container_name: jupyter
+    hostname: jupyter
+    ports:
+      - "8889:8888"
+    command: start-notebook.sh --NotebookApp.token=''
+    volumes:
+      - ./jupyter:/home/jovyan/work
 
 networks:
-  elastic:
-    driver: bridge
+  es7net: 
