@@ -71,7 +71,6 @@ services:
   jupyter:
     build:
       context: ./dockerfile
-      dockerfile: dockerfile-jupyter
     container_name: jupyter
     hostname: jupyter
     ports:
