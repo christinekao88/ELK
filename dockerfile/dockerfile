@@ -8,4 +8,4 @@ ADD . /workspace
 ADD logstash-mssql.conf /etc/logstash/conf.d/logstash-mssql.conf
  
 #這個測試會用到 logstash 的 JDBC plugin。用以下這個步驟安裝
-RUN gosu logstash /opt/logstash/bin/logstash-plugin install logstash-input-jdbc
+#RUN gosu logstash /opt/logstash/bin/logstash-plugin install logstash-input-jdbc
