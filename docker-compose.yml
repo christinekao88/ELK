@@ -28,6 +28,7 @@ services:
     hostname: logstash
     restart: always
     volumes:
+      - .$PWD/logstash:/logstash
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./logstash/data:/opt/logstash_data
       - ./logstash/template:/opt/logstash_template
