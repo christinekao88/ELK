@@ -5,7 +5,7 @@ WORKDIR /workspace
 ADD . /workspace
  
 #另外我在本機有編輯了 logstash 的設定檔需要一開始就塞進 Container 裡。這邊可以將檔案加到指定的 Container 上的路徑
-ADD logstash-mssql.conf /etc/logstash/conf.d/logstash-mssql.conf
+ADD logstash-twitter.conf /etc/logstash/conf.d/logstash-twitter.conf
  
 #這個測試會用到 logstash 的 JDBC plugin。用以下這個步驟安裝
 #RUN gosu logstash /opt/logstash/bin/logstash-plugin install logstash-input-jdbc
