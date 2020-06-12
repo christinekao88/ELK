@@ -1,3 +1,4 @@
-#指定基底文件為
+ #指定基底文件為
  FROM 
  RUN pip install --upgrade pip
+ RUN pip install kafka pymysql pymongo
