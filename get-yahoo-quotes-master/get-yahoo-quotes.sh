@@ -18,7 +18,7 @@
 ## ----------------------------------------------------------------------------------------------------
 
 SYMBOL=$1
-if [[ -z $SYMBOL ]]; then
+if [ -z $SYMBOL ]; then
   echo "Please enter a SYMBOL as the first parameter to this script"
   exit
 fi
@@ -58,7 +58,7 @@ log $URL
 crumb=$(getCrumb $URL)
 log $crumb
 log "CRUMB: $crumb"
-if [[ -z $crumb ]]; then
+if [ -z $crumb ]; then
   echo "Error finding a valid crumb value"
   exit
 fi
