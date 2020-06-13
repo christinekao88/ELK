@@ -1,0 +1,4 @@
+#指定基底文件
+FROM 
+RUN pip install --upgrade pip
+
