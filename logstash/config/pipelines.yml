@@ -12,4 +12,6 @@
 - pipeline.id: covid19_data
   path.config: "/usr/share/logstash/pipeline/covid19_import.conf"   
 - pipeline.id: covid19_data_new
-  path.config: "/usr/share/logstash/pipeline/covid19_import_new.conf"   
+  path.config: "/usr/share/logstash/pipeline/covid19_import_new.conf"
+- pipeline.id: twitter_keyword
+  path.config: "/usr/share/logstash/pipeline/twitter_keyword.conf"      
