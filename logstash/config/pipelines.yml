@@ -12,4 +12,6 @@
 - pipeline.id: covid19_data
   path.config: "/usr/share/logstash/pipeline/covid19_import.conf"   
 - pipeline.id: covid19_data_new
-  path.config: "/usr/share/logstash/pipeline/covid19_import_new.conf"   
+  path.config: "/usr/share/logstash/pipeline/covid19_import_new.conf"  
+- pipeline.id: mlb_test
+  path.config: "/usr/share/logstash/pipeline/mlb_test_import.conf"   

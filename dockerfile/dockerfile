@@ -1,4 +1,9 @@
 #指定基底文件
 FROM 
-RUN pip install --upgrade pip
+COPY ./logstash/Script/delete_import_data.sh /usr/share/logstash
+RUN /usr/share/logstash/delete_import_data.sh
+
+
+
+#RUN pip install --upgrade pip
 
