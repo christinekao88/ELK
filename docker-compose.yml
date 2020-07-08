@@ -9,7 +9,7 @@ services:
       - cluster.name=docker-cluster
       - node.name=node1
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - "cluster.initial_master_nodes=node1"
     ulimits:
       memlock:
