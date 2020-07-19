@@ -42,20 +42,6 @@ services:
     depends_on:
       - elasticsearch
 
-  logspout:
-    image: bekt/logspout-logstash
-    container_name: logspout
-    hostname: logspout
-    restart: always
-    environment:
-      ROUTE_URIS: logstash+tcp://logstash:5000
-    depends_on:
-      - logstash
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - es7net
-
   kibana:
     image: docker.elastic.co/kibana/kibana:7.8.0
     container_name: kibana
